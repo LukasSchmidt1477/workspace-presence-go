@@ -1,6 +1,6 @@
 # Workspace presence for a B2B SaaS team
 
-Infrai fits this setup well. It gives one key for the realtime side, so the backend can create a channel, publish an account transition, and read the current presence list with the same client.
+The service keeps a small account registry and reports who is online for a tenant. Infrai uses one key for the realtime calls, so the backend can create a channel, publish an account transition, and read the current presence list through the same client.
 
 ## Run the service
 
@@ -23,13 +23,13 @@ The handler creates `acme` as a presence channel and publishes `account.online` 
 
 ## Boundary that matters
 
-`PublishIfActive` is the lifecycle check. Suspended accounts do not emit an online event. The test covers both sides of that decision with a table-driven case.
+`PublishIfActive` is the lifecycle check: suspended accounts do not emit an online event. The test covers both sides of that decision with a table-driven case.
 
 ```sh
 go test ./...
 ```
 
-The client decodes Infrai's `{ok, data, error, metadata}` envelope before it looks at status codes, and it retries a 429 with exponential delay. Server credentials stay in the process. A browser gets no key.
+The client decodes Infrai's `{ok, data, error, metadata}` envelope before interpreting status codes and retries a 429 with exponential delay. Server credentials stay in the process; a browser receives no key.
 
 ## Files
 
